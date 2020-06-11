@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="responsive.css" />
+    <title>TaskCalendar</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <div id="nav">
+        <router-link to="/calendar">Calender</router-link>
+      </div>
+
+      <router-view />
+    </div>
+    <div class="home">
+      <FullCalendar
+        class="full"
+        defaultView="dayGridMonth"
+        :locale="locale"
+        :header="calendarHeader"
+        :weekends="calendarWeekends"
+        :plugins="calendarPlugins"
+        :events="calendarEvents"
+      />
+      <div v-show="modaladd">
+        <transition name="modal" appear>
+          <div class="modal modal-overlay" @click="closeModaladd">
+            <div class="modal-content" @click.stop>
+              <p>~Schedule~</p>
+              <div class="items">
+                <div class="form">
+                  Title:
+                  <input type="text" v-model="title" />
+                </div>
+                <div class="form">
+                  Start:
+                  <input
+                    type="text"
+                    v-model="start"
+                    placeholder="YYYY-MM-DDT00:00:00"
+                  />
+                </div>
+                <div class="form">
+                  End:
+                  <input
+                    type="text"
+                    v-model="end"
+                    placeholder="YYYY-MM-DDT00:00:00"
+                  />
+                </div>
+              </div>
+
+              <button class="ok" @click="decide" :events="calendarEvents">
+                OK
+              </button>
+            </div>
+          </div>
+        </transition>
+      </div>
+
+      <div v-show="modaldelete">
+        <transition name="modal" appear>
+          <div class="modal modal-overlay" @click="closeModaldelete">
+            <div class="modal-content" @click.stop>
+              <p>~Schedule~</p>
+              <div class="items">
+                <div class="form">
+                  Title:
+                  <input type="text" v-model="title" />
+                </div>
+                <div class="form">
+                  Start:
+                  <input
+                    type="text"
+                    v-model="start"
+                    placeholder="YYYY-MM-DDT00:00:00"
+                  />
+                </div>
+                <div class="form">
+                  End:
+                  <input
+                    type="text"
+                    v-model="end"
+                    placeholder="YYYY-MM-DDT00:00:00"
+                  />
+                </div>
+              </div>
+
+              <button class="ok" @click="del" :events="calendarEvents">
+                OK
+              </button>
+            </div>
+          </div>
+        </transition>
+      </div>
+      <div class="buttons">
+        <div class="add">
+          <button @click="openModaladd">+</button>
+        </div>
+        <div class="delete">
+          <button @click="openModaldelete">-</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
