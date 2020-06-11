@@ -116,7 +116,8 @@ export default {
       start: "",
       end: "",
       modaladd: false,
-      modaldelete: false
+      modaldelete: false,
+      id: []
     };
   },
   methods: {
@@ -155,19 +156,34 @@ export default {
     closeModaldelete() {
       this.modaldelete = false;
     },
+    get() {
+      var db = firebase.firestore();
+      db.collection("schedules")
+        .get()
+        .then(query => {
+          query(doc => {
+            var id = doc.id;
+            this.id.push(id);
+          });
+        });
+    },
     async del() {
       var db = firebase.firestore();
-      var id = this.id;
       if (this.title.length > 0 && this.start.length > 0) {
-        db.collection("schedules")
-          .doc(id)
-          .delete();
-        this.calendarEvents.delete();
-        this.title = "";
-        this.start = "";
-        this.end = "";
+        this.id.forEach(element => {
+          db.collection("schedules")
+            // .where("title", "==", this.title)
+            // .where("start", "==", this.start)
+            // .where("end", "==", this.end)
+            .doc(element)
+            .delete();
+          // this.calendarEvents.delete();
+        });
       }
       this.closeModaldelete();
+    },
+    created() {
+      this.get();
     }
   }
 };
