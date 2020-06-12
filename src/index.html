@@ -17,15 +17,6 @@
       <router-view />
     </div>
     <div class="home">
-      <FullCalendar
-        class="full"
-        defaultView="dayGridMonth"
-        :locale="locale"
-        :header="calendarHeader"
-        :weekends="calendarWeekends"
-        :plugins="calendarPlugins"
-        :events="calendarEvents"
-      />
       <div v-show="modaladd">
         <transition name="modal" appear>
           <div class="modal modal-overlay" @click="closeModaladd">
@@ -106,5 +97,6 @@
         </div>
       </div>
     </div>
+    <script src="/__/firebase/7.15.1/firebase-auth.js"></script>
   </body>
 </html>

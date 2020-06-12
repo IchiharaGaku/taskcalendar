@@ -90,28 +90,12 @@ export default {
       component: FullCalendar,
       calendarPlugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
       calendarHeader: {
-        left: "prev.next today",
+        left: "prev today next",
         center: "title",
         right: "dayGridMonth, timeGridWeek, timeGridDay, listweek"
       },
       calendarWeekends: true,
-      calendarEvents: [
-        {
-          title: "報告会",
-          start: "2020-06-10T10:00:00",
-          end: "2020-06-10T12:30:00"
-        },
-        {
-          title: "ミーティング",
-          start: "2020-06-12T10:30:00",
-          end: "2020-06-12T12:30:00"
-        },
-        {
-          title: "打合せ",
-          start: "2020-06-18T13:30:00",
-          end: "2020-06-18T14:30:00"
-        }
-      ],
+      calendarEvents: [],
       title: "",
       start: "",
       end: "",
@@ -164,22 +148,28 @@ export default {
         // .where("end", "==", this.end)
         .get()
         .then(query => {
-          this.id.push({
-            title: this.title,
-            start: this.start,
-            end: this.end
+          query.forEach(element => {
+            let eventData = element.data();
+            this.calendarEvents.push({
+              id: element.id,
+              title: eventData.title,
+              start: eventData.start,
+              end: eventData.end
+            });
+            console.log(eventData);
           });
-          console.log(query.docs[0].id);
         });
     },
-    async del() {
+    del() {
       var db = firebase.firestore();
       if (this.title.length > 0 && this.start.length > 0) {
-        this.id.forEach(element => {
-          db.collection("schedules")
-            .doc(element)
-            .delete();
-          // this.calendarEvents.delete();
+        this.calendarEvents.forEach(element => {
+          if (this.title == element.title && this.start == element.start) {
+            db.collection("schedules")
+              .doc(element.id)
+              .delete();
+            // this.calendarEvents.delete();
+          }
         });
         this.title = "";
         this.start = "";
@@ -205,7 +195,7 @@ td.fc-sun {
 }
 .full {
   width: 70%;
-  height: 70%;
+  height: 50%;
   margin: 0 auto;
 }
 .modal-overlay {
@@ -296,5 +286,22 @@ td.fc-sun {
   background-color: rgb(64, 51, 85);
   border-radius: 50%;
   color: #fff;
+}
+
+@media screen and (max-width: 768px) {
+  .form {
+    margin: 30px 10px;
+  }
+  .ok {
+    width: 20%;
+    height: 40px;
+    margin: auto;
+  }
+}
+@media screen and (max-width: 480px) {
+  .full {
+    width: 90%;
+    height: 90%;
+  }
 }
 </style>
