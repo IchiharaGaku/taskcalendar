@@ -159,12 +159,17 @@ export default {
     get() {
       var db = firebase.firestore();
       db.collection("schedules")
+        // .where("title", "==", this.title)
+        // .where("start", "==", this.start)
+        // .where("end", "==", this.end)
         .get()
         .then(query => {
-          query(doc => {
-            var id = doc.id;
-            this.id.push(id);
+          this.id.push({
+            title: this.title,
+            start: this.start,
+            end: this.end
           });
+          console.log(query.docs[0].id);
         });
     },
     async del() {
@@ -172,19 +177,19 @@ export default {
       if (this.title.length > 0 && this.start.length > 0) {
         this.id.forEach(element => {
           db.collection("schedules")
-            // .where("title", "==", this.title)
-            // .where("start", "==", this.start)
-            // .where("end", "==", this.end)
             .doc(element)
             .delete();
           // this.calendarEvents.delete();
         });
+        this.title = "";
+        this.start = "";
+        this.end = "";
       }
       this.closeModaldelete();
-    },
-    created() {
-      this.get();
     }
+  },
+  created() {
+    this.get();
   }
 };
 </script>
